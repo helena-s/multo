@@ -38,7 +38,8 @@ class tx2genome:
                 genomicread = [read[0],read[1],txname,str(int(read[3])),str(int(read[3])+readmatchlength-1)]
                 return genomicread
             else:
-                sys.stderr.write("Transcript name not in database: %s\n"%txname)
+                sys.stderr.write('Transcript name not in database: "{0}"\n'.format(txname))
+                sys.stderr.write('Bowtie line: "{0}"\n'.format(read))
                 return None
         txstrand = tx[1]
         readtxstart = int(read[3])#will be zero-based
