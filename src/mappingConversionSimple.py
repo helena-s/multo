@@ -30,7 +30,7 @@ class tx2genome:
         try:
             txname = read[2]
         except:
-            sys.stderr.write('The bowtie record has wrong format: "{0}"\n'.format(read))
+            sys.stderr.write('The bowtie record has wrong format. Bowtie line: "{0}"\n'.format(read))
             return None
         tx = self.tx.get(txname, None)
         if tx is None: 
@@ -137,12 +137,18 @@ class tx2genome:
     def convert_transcriptomefile(self, txmapped, genomicmapped, readmatchlength):#genomicmapped_sam is the output-file
         txf = open(txmapped)
         gf = open(genomicmapped, 'w')
+        l = 0
         for line in txf:
+            l +=1
             read = line.strip('\n').split('\t')#name, strand, chrom, startPos
             try:
                 genomicread = self.convert_read(read, readmatchlength)
                 if not genomicread is None: 
                     gf.write('\t'.join(genomicread)+'\n')
+                else:
+                    sys.stderr.write('Problem with conversion at line: "{0}"\n'.format(l))
+                    sys.stderr.write('Problematic file: "{0}"\n'.format(txmapped))
+                    sys.stderr.write('Problematic line: "{0}"\n'.format(line))
             except OverflowError:
                 sys.stderr.write('%s\n'%read)
         gf.close()
