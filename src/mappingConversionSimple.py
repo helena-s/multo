@@ -27,7 +27,11 @@ class tx2genome:
 
     def convert_read(self, read, readmatchlength):
         genomicregions=[]
-        txname = read[2]
+        try:
+            txname = read[2]
+        except:
+            sys.stderr.write('The bowtie record has wrong format: "{0}"\n'.format(read))
+            return None
         tx = self.tx.get(txname, None)
         if tx is None: 
             if txname in self.chromosomes:
